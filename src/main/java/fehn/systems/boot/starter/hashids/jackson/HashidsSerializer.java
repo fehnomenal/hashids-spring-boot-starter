@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.ContextualSerializer;
 import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer;
-import org.hashids.Hashids;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -15,21 +14,25 @@ import java.util.stream.Stream;
 
 public class HashidsSerializer extends StdScalarSerializer<Object> implements ContextualSerializer {
     private final TypeInformation typeInformation;
-    private final Hashids hashids;
+    private final HashidsJacksonProvider provider;
+    private final Hashids annotation;
 
     @SuppressWarnings("SpringJavaAutowiredMembersInspection")
     @Autowired
-    public HashidsSerializer(final Hashids hashids) {
+    public HashidsSerializer(final HashidsJacksonProvider provider) {
         super(Object.class);
         this.typeInformation = null;
-        this.hashids = hashids;
+        this.provider = provider;
+        this.annotation = null;
     }
 
     private HashidsSerializer(final TypeInformation typeInformation,
-                              final Hashids hashids) {
+                              final HashidsJacksonProvider provider,
+                              final Hashids annotation) {
         super(Object.class);
         this.typeInformation = typeInformation;
-        this.hashids = hashids;
+        this.provider = provider;
+        this.annotation = annotation;
     }
 
     @Override
@@ -40,7 +43,7 @@ public class HashidsSerializer extends StdScalarSerializer<Object> implements Co
             final var typeInformation = TypeInformation.of(property.getType());
 
             if (typeInformation != null) {
-                return new HashidsSerializer(typeInformation, hashids);
+                return new HashidsSerializer(typeInformation, provider, annotation);
             }
         }
 
@@ -50,6 +53,9 @@ public class HashidsSerializer extends StdScalarSerializer<Object> implements Co
     @Override
     public void serialize(Object value, JsonGenerator gen, SerializerProvider provider) throws IOException {
         assert typeInformation != null;
+        assert annotation != null;
+
+        final var hashids = this.provider.getFromAnnotation(annotation);
 
         final String encoded;
         if (typeInformation.isArray()) {

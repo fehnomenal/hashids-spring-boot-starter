@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.deser.ContextualDeserializer;
 import com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer;
-import org.hashids.Hashids;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -15,21 +14,25 @@ import java.util.stream.LongStream;
 
 public class HashidsDeserializer extends StdScalarDeserializer<Object> implements ContextualDeserializer {
     private final TypeInformation typeInformation;
-    private final Hashids hashids;
+    private final HashidsJacksonProvider provider;
+    private final Hashids annotation;
 
     @SuppressWarnings("SpringJavaAutowiredMembersInspection")
     @Autowired
-    public HashidsDeserializer(final Hashids hashids) {
+    public HashidsDeserializer(final HashidsJacksonProvider provider) {
         super(Object.class);
+        this.provider = provider;
         this.typeInformation = null;
-        this.hashids = hashids;
+        this.annotation = null;
     }
 
     private HashidsDeserializer(final TypeInformation typeInformation,
-                                final Hashids hashids) {
+                                final HashidsJacksonProvider provider,
+                                final Hashids annotation) {
         super(Object.class);
         this.typeInformation = typeInformation;
-        this.hashids = hashids;
+        this.provider = provider;
+        this.annotation = annotation;
     }
 
     @Override
@@ -40,7 +43,7 @@ public class HashidsDeserializer extends StdScalarDeserializer<Object> implement
             final var typeInformation = TypeInformation.of(property.getType());
 
             if (typeInformation != null) {
-                return new HashidsDeserializer(typeInformation, hashids);
+                return new HashidsDeserializer(typeInformation, provider, annotation);
             }
         }
 
@@ -51,6 +54,9 @@ public class HashidsDeserializer extends StdScalarDeserializer<Object> implement
     public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         if (p.currentToken() == JsonToken.VALUE_STRING) {
             assert typeInformation != null;
+            assert annotation != null;
+
+            final var hashids = provider.getFromAnnotation(annotation);
 
             final var encoded = p.getValueAsString();
             final var decoded = hashids.decode(encoded);
