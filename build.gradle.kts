@@ -17,6 +17,7 @@ repositories {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    annotationProcessor("org.springframework.boot:spring-boot-autoconfigure-processor")
 
     implementation("org.hashids:hashids:1.0.3")
 }
