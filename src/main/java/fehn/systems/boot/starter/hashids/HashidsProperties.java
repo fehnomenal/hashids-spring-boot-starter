@@ -1,10 +1,12 @@
 package fehn.systems.boot.starter.hashids;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "hashids")
+@EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class HashidsProperties {
