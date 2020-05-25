@@ -18,10 +18,18 @@ public class HashidsAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public Hashids hashids() {
-        return new Hashids(
-            properties.getSalt(),
-            properties.getMinHashLength(),
-            properties.getAlphabet()
-        );
+        if (properties.getAlphabet() != null) {
+            return new Hashids(
+                properties.getSalt(),
+                properties.getMinHashLength(),
+                properties.getAlphabet()
+            );
+        } else if (properties.getMinHashLength() > 0) {
+            return new Hashids(properties.getSalt(), properties.getMinHashLength());
+        } else if (properties.getSalt() != null) {
+            return new Hashids(properties.getSalt());
+        } else {
+            return new Hashids();
+        }
     }
 }
