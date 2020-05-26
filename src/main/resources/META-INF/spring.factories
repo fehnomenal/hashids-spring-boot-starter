@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  systems.fehn.boot.starter.hashids.HashidsAutoConfiguration,\
+  systems.fehn.boot.starter.hashids.jackson.HashidsJacksonAutoConfiguration
