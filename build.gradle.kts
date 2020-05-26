@@ -1,7 +1,7 @@
 plugins {
     `java-library`
 
-    id("com.olafmertens.git-version") version "0.1.1"
+    id("org.ajoberstar.grgit") version "4.0.2"
 
     id("org.springframework.boot") version "2.2.6.RELEASE"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
@@ -9,6 +9,7 @@ plugins {
 }
 
 group = "systems.fehn"
+version = grgit.describe(mapOf("tags" to true))
 
 repositories {
     mavenCentral()
