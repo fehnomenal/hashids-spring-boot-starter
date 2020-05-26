@@ -19,7 +19,7 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.springframework.boot:spring-boot-autoconfigure-processor")
 
-    implementation("org.hashids:hashids:1.0.3")
+    api("org.hashids:hashids:1.0.3")
 
     compileOnly("com.fasterxml.jackson.core:jackson-databind")
 }
