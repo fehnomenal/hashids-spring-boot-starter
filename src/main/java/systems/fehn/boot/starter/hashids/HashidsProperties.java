@@ -1,4 +1,4 @@
-package fehn.systems.boot.starter.hashids;
+package systems.fehn.boot.starter.hashids;
 
 import lombok.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;

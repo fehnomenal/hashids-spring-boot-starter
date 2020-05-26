@@ -1,4 +1,4 @@
-package fehn.systems.boot.starter.hashids.jackson;
+package systems.fehn.boot.starter.hashids.jackson;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.BeanProperty;
@@ -37,7 +37,7 @@ public class HashidsSerializer extends StdScalarSerializer<Object> implements Co
 
     @Override
     public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property) {
-        final var annotation = property.getAnnotation(fehn.systems.boot.starter.hashids.jackson.Hashids.class);
+        final var annotation = property.getAnnotation(systems.fehn.boot.starter.hashids.jackson.Hashids.class);
 
         if (annotation != null) {
             final var typeInformation = TypeInformation.of(property.getType());

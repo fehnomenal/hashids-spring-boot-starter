@@ -1,11 +1,11 @@
-package fehn.systems.boot.starter.hashids.jackson;
+package systems.fehn.boot.starter.hashids.jackson;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fehn.systems.boot.starter.hashids.HashidsProperties;
-import fehn.systems.boot.starter.hashids.HashidsProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import systems.fehn.boot.starter.hashids.HashidsProperties;
+import systems.fehn.boot.starter.hashids.HashidsProvider;
 
 @Configuration
 @ConditionalOnClass(ObjectMapper.class)

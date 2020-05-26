@@ -1,7 +1,7 @@
-package fehn.systems.boot.starter.hashids.jackson;
+package systems.fehn.boot.starter.hashids.jackson;
 
-import fehn.systems.boot.starter.hashids.HashidsProperties;
-import fehn.systems.boot.starter.hashids.HashidsProvider;
+import systems.fehn.boot.starter.hashids.HashidsProperties;
+import systems.fehn.boot.starter.hashids.HashidsProvider;
 
 public class HashidsJacksonProvider {
     private final HashidsProperties properties;

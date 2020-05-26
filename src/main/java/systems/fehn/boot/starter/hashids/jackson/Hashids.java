@@ -1,4 +1,4 @@
-package fehn.systems.boot.starter.hashids.jackson;
+package systems.fehn.boot.starter.hashids.jackson;
 
 import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

@@ -1,4 +1,4 @@
-package fehn.systems.boot.starter.hashids;
+package systems.fehn.boot.starter.hashids;
 
 import org.hashids.Hashids;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
