@@ -1,6 +1,6 @@
 # Hashids Spring Boot Starter
 
-![Maven Central](https://img.shields.io/maven-central/v/systems.fehn/hashids-spring-boot-starter?style=for-the-badge)
+[![Maven Central](https://img.shields.io/maven-central/v/systems.fehn/hashids-spring-boot-starter)](https://search.maven.org/artifact/systems.fehn/hashids-spring-boot-starter)
 
 - Provides a bean for Hashids from https://github.com/10cella/hashids-java
 - Allows customizing the properties of Hashids via Spring properties (`hashids.salt`, `hashids.min-hash-length` and `hashids.alphabet`)
