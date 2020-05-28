@@ -78,6 +78,8 @@ public class UserModel {
 
 Now the user's id will be automatically encoded and decoded with the `Hashids` bean.
 
+`@Hashids` can be applied to types `int`, `Integer`, `long`, `Long` and arrays of these types.
+
 You can customize all settings for each annotation (they are optional and default to the value of the corresponding property):
 
 ```java
