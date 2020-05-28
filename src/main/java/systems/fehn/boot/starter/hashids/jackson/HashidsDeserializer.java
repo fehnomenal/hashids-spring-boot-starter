@@ -8,18 +8,20 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.deser.ContextualDeserializer;
 import com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer;
 import org.springframework.beans.factory.annotation.Autowired;
+import systems.fehn.boot.starter.hashids.Hashids;
+import systems.fehn.boot.starter.hashids.HashidsProvider;
 
 import java.io.IOException;
 import java.util.stream.LongStream;
 
 public class HashidsDeserializer extends StdScalarDeserializer<Object> implements ContextualDeserializer {
     private final TypeInformation typeInformation;
-    private final HashidsJacksonProvider provider;
+    private final HashidsProvider provider;
     private final Hashids annotation;
 
     @SuppressWarnings("SpringJavaAutowiredMembersInspection")
     @Autowired
-    public HashidsDeserializer(final HashidsJacksonProvider provider) {
+    public HashidsDeserializer(final HashidsProvider provider) {
         super(Object.class);
         this.provider = provider;
         this.typeInformation = null;
@@ -27,7 +29,7 @@ public class HashidsDeserializer extends StdScalarDeserializer<Object> implement
     }
 
     private HashidsDeserializer(final TypeInformation typeInformation,
-                                final HashidsJacksonProvider provider,
+                                final HashidsProvider provider,
                                 final Hashids annotation) {
         super(Object.class);
         this.typeInformation = typeInformation;
@@ -37,7 +39,7 @@ public class HashidsDeserializer extends StdScalarDeserializer<Object> implement
 
     @Override
     public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property) {
-        final var annotation = property.getAnnotation(systems.fehn.boot.starter.hashids.jackson.Hashids.class);
+        final var annotation = property.getAnnotation(Hashids.class);
 
         if (annotation != null) {
             final var typeInformation = TypeInformation.of(property.getType());
@@ -59,30 +61,36 @@ public class HashidsDeserializer extends StdScalarDeserializer<Object> implement
             final var hashids = provider.getFromAnnotation(annotation);
 
             final var encoded = p.getValueAsString();
-            final var decoded = hashids.decode(encoded);
 
-            if (typeInformation.isArray()) {
-                if (typeInformation.isBoxed()) {
-                    if (typeInformation.isLong()) {
-                        return LongStream.of(decoded).boxed().toArray(Long[]::new);
-                    } else {
-                        return LongStream.of(decoded).mapToInt(l -> (int) l).boxed().toArray(Integer[]::new);
-                    }
+            return decode(encoded, hashids, typeInformation);
+        }
+        return null;
+    }
+
+
+    public static Object decode(final String encoded, final org.hashids.Hashids hashids, final TypeInformation typeInformation) {
+        final var decoded = hashids.decode(encoded);
+
+        if (typeInformation.isArray()) {
+            if (typeInformation.isBoxed()) {
+                if (typeInformation.isLong()) {
+                    return LongStream.of(decoded).boxed().toArray(Long[]::new);
                 } else {
-                    if (typeInformation.isLong()) {
-                        return decoded;
-                    } else {
-                        return LongStream.of(decoded).mapToInt(l -> (int) l).toArray();
-                    }
+                    return LongStream.of(decoded).mapToInt(l -> (int) l).boxed().toArray(Integer[]::new);
                 }
             } else {
                 if (typeInformation.isLong()) {
-                    return decoded[0];
+                    return decoded;
                 } else {
-                    return (int) decoded[0];
+                    return LongStream.of(decoded).mapToInt(l -> (int) l).toArray();
                 }
             }
+        } else {
+            if (typeInformation.isLong()) {
+                return decoded[0];
+            } else {
+                return (int) decoded[0];
+            }
         }
-        return null;
     }
 }

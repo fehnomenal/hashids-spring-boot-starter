@@ -5,8 +5,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 @Configuration
+@Import(HashidsWebMvcConfigurer.class)
 @EnableConfigurationProperties(HashidsProperties.class)
 public class HashidsAutoConfiguration {
     @Bean
@@ -21,7 +23,7 @@ public class HashidsAutoConfiguration {
     }
 
     @Bean
-    public HashidsProvider hashidsProvider() {
-        return new HashidsProvider();
+    public HashidsProvider hashidsProvider(final HashidsProperties properties) {
+        return new HashidsProvider(properties);
     }
 }

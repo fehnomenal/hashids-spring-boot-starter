@@ -19,7 +19,9 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter")
+    compileOnly("org.springframework.boot:spring-boot-starter")
+    compileOnly("org.springframework.boot:spring-boot-starter-web")
+
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.springframework.boot:spring-boot-autoconfigure-processor")
 
@@ -33,6 +35,12 @@ java.withJavadocJar()
 
 tasks.jar {
     enabled = true
+}
+
+tasks.register("version") {
+    doLast {
+        println(version)
+    }
 }
 
 publishing {
@@ -49,7 +57,7 @@ publishing {
                 }
             }
             pom {
-                name.set("$group:${project.name}")
+                name.set("Hashids Spring Boot Starter")
                 description.set("Use Hashids with Spring Boot")
                 url.set("https://github.com/fehnomenal/hashids-spring-boot-starter")
                 licenses {
@@ -74,6 +82,7 @@ publishing {
         }
     }
     repositories {
+        mavenLocal()
         maven {
             url = if (isRelease) {
                 uri("https://oss.sonatype.org/service/local/staging/deploy/maven2")

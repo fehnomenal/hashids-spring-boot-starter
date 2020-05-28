@@ -4,7 +4,8 @@
 
 - Provides a bean for Hashids from https://github.com/10cella/hashids-java
 - Allows customizing the properties of Hashids via Spring properties (`hashids.salt`, `hashids.min-hash-length` and `hashids.alphabet`)
-- Automatically encode/decode values with jackson
+- Automatically decodes Spring request parameters
+- Automatically encodes/decodes values with jackson
 
 
 
@@ -63,7 +64,9 @@ public class UserController {
 
 ## `@Hashids` annotation
 
-Alternatively, you can annotate fields in your models with `@systems.fehn.boot.starter.hashids.jackson.Hashids`:
+### Model fields
+
+Alternatively, you can annotate fields in your models with `@systems.fehn.boot.starter.hashids.Hashids`:
 
 ```java
 public class UserModel {
@@ -84,3 +87,9 @@ public class UserModel {
     public String name;
 }
 ```
+
+
+
+### Controller parameters
+
+Request parameters of controller methods can be annotated in the same fashion.

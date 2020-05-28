@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.ContextualSerializer;
 import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
+import systems.fehn.boot.starter.hashids.Hashids;
+import systems.fehn.boot.starter.hashids.HashidsProvider;
 
 import java.io.IOException;
 import java.util.stream.IntStream;
@@ -14,12 +16,12 @@ import java.util.stream.Stream;
 
 public class HashidsSerializer extends StdScalarSerializer<Object> implements ContextualSerializer {
     private final TypeInformation typeInformation;
-    private final HashidsJacksonProvider provider;
+    private final HashidsProvider provider;
     private final Hashids annotation;
 
     @SuppressWarnings("SpringJavaAutowiredMembersInspection")
     @Autowired
-    public HashidsSerializer(final HashidsJacksonProvider provider) {
+    public HashidsSerializer(final HashidsProvider provider) {
         super(Object.class);
         this.typeInformation = null;
         this.provider = provider;
@@ -27,7 +29,7 @@ public class HashidsSerializer extends StdScalarSerializer<Object> implements Co
     }
 
     private HashidsSerializer(final TypeInformation typeInformation,
-                              final HashidsJacksonProvider provider,
+                              final HashidsProvider provider,
                               final Hashids annotation) {
         super(Object.class);
         this.typeInformation = typeInformation;
@@ -37,7 +39,7 @@ public class HashidsSerializer extends StdScalarSerializer<Object> implements Co
 
     @Override
     public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property) {
-        final var annotation = property.getAnnotation(systems.fehn.boot.starter.hashids.jackson.Hashids.class);
+        final var annotation = property.getAnnotation(Hashids.class);
 
         if (annotation != null) {
             final var typeInformation = TypeInformation.of(property.getType());
@@ -56,8 +58,13 @@ public class HashidsSerializer extends StdScalarSerializer<Object> implements Co
         assert annotation != null;
 
         final var hashids = this.provider.getFromAnnotation(annotation);
+        final var encoded = encode(value, hashids, typeInformation);
 
-        final String encoded;
+        gen.writeString(encoded);
+    }
+
+
+    public static String encode(final Object value, final org.hashids.Hashids hashids, final TypeInformation typeInformation) {
         if (typeInformation.isArray()) {
             final long[] realValues;
             if (typeInformation.isBoxed()) {
@@ -73,7 +80,7 @@ public class HashidsSerializer extends StdScalarSerializer<Object> implements Co
                     realValues = IntStream.of((int[]) value).mapToLong(Long::valueOf).toArray();
                 }
             }
-            encoded = hashids.encode(realValues);
+            return hashids.encode(realValues);
         } else {
             final long realValue;
             if (typeInformation.isLong()) {
@@ -81,9 +88,7 @@ public class HashidsSerializer extends StdScalarSerializer<Object> implements Co
             } else {
                 realValue = (Integer) value;
             }
-            encoded = hashids.encode(realValue);
+            return hashids.encode(realValue);
         }
-
-        gen.writeString(encoded);
     }
 }
