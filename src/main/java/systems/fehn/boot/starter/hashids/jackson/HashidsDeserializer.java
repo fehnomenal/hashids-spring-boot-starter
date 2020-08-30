@@ -38,7 +38,7 @@ public class HashidsDeserializer extends StdScalarDeserializer<Object> implement
     }
 
     @Override
-    public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property) {
+    public JsonDeserializer<?> createContextual(final DeserializationContext ctxt, final BeanProperty property) {
         final var annotation = property.getAnnotation(Hashids.class);
 
         if (annotation != null) {
@@ -53,7 +53,7 @@ public class HashidsDeserializer extends StdScalarDeserializer<Object> implement
     }
 
     @Override
-    public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+    public Object deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
         if (p.currentToken() == JsonToken.VALUE_STRING) {
             assert typeInformation != null;
             assert annotation != null;

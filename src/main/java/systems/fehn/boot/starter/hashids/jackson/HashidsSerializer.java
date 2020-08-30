@@ -38,7 +38,7 @@ public class HashidsSerializer extends StdScalarSerializer<Object> implements Co
     }
 
     @Override
-    public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property) {
+    public JsonSerializer<?> createContextual(final SerializerProvider prov, final BeanProperty property) {
         final var annotation = property.getAnnotation(Hashids.class);
 
         if (annotation != null) {
@@ -53,7 +53,7 @@ public class HashidsSerializer extends StdScalarSerializer<Object> implements Co
     }
 
     @Override
-    public void serialize(Object value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+    public void serialize(final Object value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
         assert typeInformation != null;
         assert annotation != null;
 
