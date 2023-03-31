@@ -39,10 +39,10 @@ public class HashidsSerializer extends StdScalarSerializer<Object> implements Co
 
     @Override
     public JsonSerializer<?> createContextual(final SerializerProvider prov, final BeanProperty property) {
-        final var annotation = property.getAnnotation(Hashids.class);
+        final Hashids annotation = property.getAnnotation(Hashids.class);
 
         if (annotation != null) {
-            final var typeInformation = TypeInformation.of(property.getType());
+            final TypeInformation typeInformation = TypeInformation.of(property.getType());
 
             if (typeInformation != null) {
                 return new HashidsSerializer(typeInformation, provider, annotation);
@@ -57,12 +57,11 @@ public class HashidsSerializer extends StdScalarSerializer<Object> implements Co
         assert typeInformation != null;
         assert annotation != null;
 
-        final var hashids = this.provider.getFromAnnotation(annotation);
-        final var encoded = encode(value, hashids, typeInformation);
+        final org.hashids.Hashids hashids = this.provider.getFromAnnotation(annotation);
+        final String encoded = encode(value, hashids, typeInformation);
 
         gen.writeString(encoded);
     }
-
 
     public static String encode(final Object value, final org.hashids.Hashids hashids, final TypeInformation typeInformation) {
         if (typeInformation.isArray()) {

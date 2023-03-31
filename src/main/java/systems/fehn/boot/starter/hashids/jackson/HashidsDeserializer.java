@@ -39,10 +39,10 @@ public class HashidsDeserializer extends StdScalarDeserializer<Object> implement
 
     @Override
     public JsonDeserializer<?> createContextual(final DeserializationContext ctxt, final BeanProperty property) {
-        final var annotation = property.getAnnotation(Hashids.class);
+        final Hashids annotation = property.getAnnotation(Hashids.class);
 
         if (annotation != null) {
-            final var typeInformation = TypeInformation.of(property.getType());
+            final TypeInformation typeInformation = TypeInformation.of(property.getType());
 
             if (typeInformation != null) {
                 return new HashidsDeserializer(typeInformation, provider, annotation);
@@ -58,9 +58,9 @@ public class HashidsDeserializer extends StdScalarDeserializer<Object> implement
             assert typeInformation != null;
             assert annotation != null;
 
-            final var hashids = provider.getFromAnnotation(annotation);
+            final org.hashids.Hashids hashids = provider.getFromAnnotation(annotation);
 
-            final var encoded = p.getValueAsString();
+            final String encoded = p.getValueAsString();
 
             return decode(encoded, hashids, typeInformation);
         }
@@ -69,7 +69,7 @@ public class HashidsDeserializer extends StdScalarDeserializer<Object> implement
 
 
     public static Object decode(final String encoded, final org.hashids.Hashids hashids, final TypeInformation typeInformation) {
-        final var decoded = hashids.decode(encoded);
+        final long[] decoded = hashids.decode(encoded);
 
         if (typeInformation.isArray()) {
             if (typeInformation.isBoxed()) {
