@@ -19,7 +19,7 @@ public class HashidsAnnotationFormatterFactory implements AnnotationFormatterFac
 
     @Override
     public Set<Class<?>> getFieldTypes() {
-        final var set = new HashSet<Class<?>>();
+        final Set<Class<?>> set = new HashSet<>();
         set.add(int.class);
         set.add(Integer.class);
         set.add(long.class);
@@ -33,15 +33,15 @@ public class HashidsAnnotationFormatterFactory implements AnnotationFormatterFac
 
     @Override
     public Printer<?> getPrinter(final Hashids annotation, final Class<?> fieldType) {
-        final var hashids = provider.getFromAnnotation(annotation);
-        final var typeInformation = getTypeInformation(fieldType);
+        final org.hashids.Hashids hashids = provider.getFromAnnotation(annotation);
+        final TypeInformation typeInformation = getTypeInformation(fieldType);
         return (object, locale) -> HashidsSerializer.encode(object, hashids, typeInformation);
     }
 
     @Override
     public Parser<?> getParser(final Hashids annotation, final Class<?> fieldType) {
-        final var hashids = provider.getFromAnnotation(annotation);
-        final var typeInformation = getTypeInformation(fieldType);
+        final org.hashids.Hashids hashids = provider.getFromAnnotation(annotation);
+        final TypeInformation typeInformation = getTypeInformation(fieldType);
         return (text, locale) -> HashidsDeserializer.decode(text, hashids, typeInformation);
     }
 
